@@ -1,11 +1,65 @@
-<% content_for :title, "New user" %>
-
-<h1>New user</h1>
-
-<%= render "form", user: @user %>
-
-<br>
-
-<div>
-  <%= link_to "Back to users", users_path %>
-</div>
+<%= form_with model: @user, local: true, html: { id: 'user-form' } do |form| %>
+    <div class="container mt-5">
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header bg-dark text-white">
+              <h3>Create User</h3>
+            </div>
+            <div class="card-body">
+              <%= form.label :name, class: "form-label" %>
+              <%= form.text_field :name, class: "form-control mb-3", placeholder: "Enter your name", id: "user_name" %>
+  
+              <%= form.label :email, class: "form-label" %>
+              <%= form.email_field :email, class: "form-control mb-3", placeholder: "Enter your email", id: "user_email" %>
+  
+              <div class="d-flex justify-content-center">
+                <button type="button" id="create-user-btn" class="btn btn-primary btn-lg mt-3">Create User</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const createUserButton = document.getElementById('create-user-btn');
+  
+      createUserButton.addEventListener('click', function () {
+        const userName = document.getElementById('user_name').value;
+        const userEmail = document.getElementById('user_email').value;
+  
+        const userData = {
+          user: {
+            name: userName,
+            email: userEmail
+          }
+        };
+  
+        fetch('/api/users', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(userData)
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('User created successfully!');
+           
+          } else {
+            alert('Error creating user');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('There was an error with the request');
+        });
+      });
+    });
+  </script>
+  

@@ -1,7 +1,5 @@
 class User < ApplicationRecord
-    after_initialize :set_default_role,if: :new_record?
-    private 
-    def set_default_role
-        self.role ||= :user
-    end
-end
+    validates :name, presence: true
+    validates :email, presence: true, uniqueness: true
+  end
+  
